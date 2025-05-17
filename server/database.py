@@ -1,0 +1,1 @@
+user_data = {'admin': {'password': '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c', 'user_tag': '11026', 'pont': 0}, 'gyuwon': {'password': '1155b0007068f8e930964e11ee161fe2958854fa8c82746890802b8ec38c9e67', 'user_tag': '11026', 'pont': 0}, 'fuck': {'password': 'edee29f882543b956620b26d0ee0e7e950399b1c4222f5de05e06425b4c995e9', 'user_tag': '11026', 'pont': 0}}
