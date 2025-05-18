@@ -39,9 +39,10 @@ async def purchase(item_name:str,id:str,password:str):
                         data[id]["point"] -= item_data[item_name]
                         data_update()
                         try:
-                            data[id][item_name] += 1
+                            data[id]['item'][item_name] += 1
                         except:
-                            data[id][item_name] = 1
+                            data[id]['item'][item_name] = 1
+                        data_update()
                         print(f"{id}가 {item_name}을 구매하였습니다.")
                         return True
                     else:
@@ -87,7 +88,7 @@ async def definfo():
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-item_data: center;
+            align-items: center;  /* <-- 수정 */
             background: linear-gradient(135deg, #2b5876, #4e4376);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             color: #fff;
@@ -143,7 +144,7 @@ async def definfo():
         }
         .github {
             display: inline-flex;
-            align-item_data: center;
+            align-items: center;  /* <-- 수정 */
             text-decoration: none;
             color: #fff;
             font-weight: bold;
@@ -232,69 +233,97 @@ async def error():
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - 페이지를 찾을 수 없습니다</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-item_data: center;
-            background: linear-gradient(135deg, #2b5876, #4e4376);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            color: #fff;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            max-width: 600px;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 10rem;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        p {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 8s ease-in-out infinite;
-        }
-        .circle:nth-child(1) { width: 120px; height: 120px; bottom: -60px; left: 10%; animation-duration: 12s; }
-        .circle:nth-child(2) { width: 80px; height: 80px; bottom: -40px; left: 70%; animation-duration: 10s; animation-delay: 2s; }
-        .circle:nth-child(3) { width: 150px; height: 150px; bottom: -75px; left: 40%; animation-duration: 14s; animation-delay: 4s; }
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-200px) scale(1.2); }
-            100% { transform: translateY(0) scale(1); }
-        }
-        /* 반응형 조정 */
-        @media (max-width: 600px) {
-            h1 { font-size: 6rem; }
-            p { font-size: 1.2rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 Not Found</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #335c8f 0%, #4a2c6b 100%);
+      overflow: hidden;
+      color: #fff;
+    }
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+    }
+    .circle:nth-child(1) {
+      width: 200px; height: 200px;
+      top: 10%; left: 15%;
+    }
+    .circle:nth-child(2) {
+      width: 300px; height: 300px;
+      bottom: 20%; right: 10%;
+      animation-duration: 8s;
+    }
+    .circle:nth-child(3) {
+      width: 150px; height: 150px;
+      bottom: 15%; left: 40%;
+      animation-duration: 5s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    .card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      max-width: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+      /* --- 수정한 부분 --- */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* ----------------- */
+    }
+    .card h1 {
+      font-size: 96px;
+      margin-bottom: 16px;
+      letter-spacing: 4px;
+    }
+    .card p {
+      font-size: 18px;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+    .card a {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 16px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .card a:hover {
+      background: #fff;
+      color: #4a2c6b;
+    }
+  </style>
 </head>
 <body>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="container">
-        <h1>404</h1>
-        <p>죄송합니다. 요청하신 페이지를 찾을 수 없습니다.</p>
-    </div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="card">
+    <h1>404</h1>
+    <p>죄송합니다. 찾으시는 페이지를 찾을 수 없습니다.</p>
+  </div>
 </body>
 </html>
-
 
     """
     return html_404
@@ -302,134 +331,158 @@ async def error():
 @app.get("/privacy",response_class=HTMLResponse)
 async def privacy_policy():
     policy_text = """
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>개인정보처리방침</title>
-    <style>
-        body {
-            font-family: '맑은 고딕', Malgun Gothic, dotum, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            color: #333;
-        }
-        h1, h2 {
-            color: #0056b3;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
-            margin-top: 20px;
-        }
-        h1 {
-            text-align: center;
-            border-bottom: 3px solid #0056b3;
-            padding-bottom: 10px;
-        }
-        strong {
-            color: #000;
-        }
-        ul {
-            list-style: disc;
-            margin-left: 20px;
-        }
-        li {
-            margin-bottom: 8px;
-        }
-        .section-intro, .section-note {
-            margin-bottom: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>개인정보처리방침</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #335c8f 0%, #4a2c6b 100%);
+      background-attachment: fixed;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .circle {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .circle:nth-child(1) { width: 180px; height: 180px; top: 10%; left: 10%; }
+    .circle:nth-child(2) { width: 250px; height: 250px; bottom: 15%; right: 20%; animation-duration: 8s; }
+    .circle:nth-child(3) { width: 140px; height: 140px; bottom: 10%; left: 45%; animation-duration: 5s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-15px) scale(1.03); }
+    }
+    .card {
+      position: relative;
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+    .card h1 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+      padding-bottom: 12px;
+    }
+    .card h2 {
+      font-size: 24px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 8px;
+    }
+    .card p, .card ul {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #f0f0f0;
+    }
+    .card ul { list-style: disc; margin-left: 20px; }
+    .card strong { color: #fff; }
+    .card .note {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+  </style>
 </head>
 <body>
-
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="card">
     <h1>개인정보처리방침</h1>
-
-    <p class="section-intro">
-        시행일자: <strong>2025년 5월 17일</strong>
-    </p>
-
-    <p class="section-intro">
-        본 플로깅 앱(이하 "앱")은 개인정보 보호법 등 관련 법령에 따라 이용자의 개인정보를 보호하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 다음과 같은 개인정보처리방침을 수립·공개합니다.
-    </p>
+    <p>시행일자: <strong>2025년 5월 17일</strong></p>
+    <p>본 플로깅 앱(이하 "앱")은 개인정보 보호법 등 관련 법령에 따라 이용자의 개인정보를 보호하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 아래와 같이 개인정보처리방침을 수립·공개합니다.</p>
 
     <h2>1. 수집하는 개인정보 항목</h2>
     <ul>
-        <li><strong>(필수)</strong> 이메일, 닉네임, 로그인 기록</li>
-        <li><strong>(선택)</strong> 프로필 사진</li>
-        <li><strong>(자동 수집)</strong> 기기정보(기종, OS), 앱 이용기록, 플로깅 거리, 시간, 위치정보(GPS)</li>
+      <li><strong>(필수)</strong> 이메일, 닉네임, 로그인 기록</li>
+      <li><strong>(선택)</strong> 프로필 사진</li>
+      <li><strong>(자동 수집)</strong> 기기정보(기종, OS), 앱 이용기록, 플로깅 거리, 시간, 위치정보(GPS)</li>
     </ul>
-    <p class="section-note">
-        ※ 위치 정보는 사용자의 동의를 받은 경우에만 수집됩니다.
-    </p>
+    <p class="note">※ 위치 정보는 사용자의 동의를 받은 경우에만 수집됩니다.</p>
 
     <h2>2. 개인정보 수집 방법</h2>
     <ul>
-        <li>회원가입 및 서비스 이용 시 사용자가 직접 입력</li>
-        <li>서비스 이용 과정에서 자동 수집</li>
-        <li>위치 정보는 사용자 동의 후 실시간 수집</li>
+      <li>회원가입 및 서비스 이용 시 사용자가 직접 입력</li>
+      <li>서비스 이용 과정에서 자동 수집</li>
+      <li>위치 정보는 사용자 동의 후 실시간 수집</li>
     </ul>
 
     <h2>3. 개인정보 이용 목적</h2>
     <ul>
-        <li>회원 식별 및 관리</li>
-        <li>플로깅 활동 기록 및 통계 제공</li>
-        <li>도전과제, 랭킹 등 기능 제공</li>
-        <li>서비스 개선 및 사용자 맞춤 콘텐츠 제공</li>
+      <li>회원 식별 및 관리</li>
+      <li>플로깅 활동 기록 및 통계 제공</li>
+      <li>도전과제, 랭킹 등 기능 제공</li>
+      <li>서비스 개선 및 사용자 맞춤 콘텐츠 제공</li>
     </ul>
 
     <h2>4. 개인정보 보유 및 이용 기간</h2>
     <ul>
-        <li>회원정보: 회원 탈퇴 시까지</li>
-        <li>플로깅 기록: 서비스 이용 기간 동안 보관</li>
-        <li>위치정보: 실시간 제공 후 즉시 폐기 또는 사용자의 요청 시 삭제</li>
+      <li>회원정보: 회원 탈퇴 시까지</li>
+      <li>플로깅 기록: 서비스 이용 기간 동안 보관</li>
+      <li>위치정보: 실시간 제공 후 즉시 폐기 또는 사용자의 요청 시 삭제</li>
     </ul>
-    <p class="section-note">
-        ※ 관련 법령에 따라 일정 기간 보관이 필요한 경우 해당 법령을 따릅니다.
-    </p>
+    <p class="note">※ 관련 법령에 따라 일정 기간 보관이 필요한 경우 해당 법령을 따릅니다.</p>
 
     <h2>5. 개인정보 제3자 제공</h2>
-    <p class="section-intro">
-        앱은 이용자의 개인정보를 제3자에게 제공하지 않습니다. 단, 아래의 경우는 예외입니다.
-    </p>
+    <p>앱은 이용자의 개인정보를 제3자에게 제공하지 않습니다. 단, 아래의 경우는 예외입니다.</p>
     <ul>
-        <li>이용자가 사전에 동의한 경우</li>
-        <li>법령에 의해 요구되는 경우</li>
+      <li>이용자가 사전에 동의한 경우</li>
+      <li>법령에 의해 요구되는 경우</li>
     </ul>
 
     <h2>6. 개인정보 처리 위탁</h2>
-    <p>
-        앱은 원활한 서비스 제공을 위해 일부 업무를 외부에 위탁할 수 있으며, 위탁 시 관련 사항은 사전에 고지합니다.
-    </p>
+    <p>앱은 원활한 서비스 제공을 위해 일부 업무를 외부에 위탁할 수 있으며, 위탁 시 관련 사항은 사전에 고지합니다.</p>
 
     <h2>7. 이용자의 권리 및 행사 방법</h2>
     <ul>
-        <li>개인정보 열람, 수정, 삭제 요청 가능</li>
-        <li>위치정보 제공 동의 철회 가능</li>
-        <li>앱 내 [설정 > 개인정보 관리] 또는 고객센터를 통해 요청 가능</li>
+      <li>개인정보 열람, 수정, 삭제 요청 가능</li>
+      <li>위치정보 제공 동의 철회 가능</li>
+      <li>앱 내 [설정 > 개인정보 관리] 또는 고객센터를 통해 요청 가능</li>
     </ul>
 
     <h2>8. 개인정보 보호를 위한 조치</h2>
     <ul>
-        <li>개인정보 암호화 저장</li>
-        <li>접근 권한 최소화 및 관리</li>
-        <li>보안 솔루션을 통한 외부 공격 차단</li>
+      <li>개인정보 암호화 저장</li>
+      <li>접근 권한 최소화 및 관리</li>
+      <li>보안 솔루션을 통한 외부 공격 차단</li>
     </ul>
 
     <h2>9. 개인정보 보호책임자</h2>
     <ul>
-        <li><strong>성명:</strong> 홍길동</li>
-        <li><strong>이메일:</strong> (이메일 주소)</li>
-        <li><strong>문의:</strong> 앱 내 고객센터 이용</li>
+      <li><strong>성명:</strong>이연우</li>
+      <li><strong>이메일:</strong> (이메일 주소)</li>
+      <li><strong>문의:</strong>신갈고등학교 교무실</li>
     </ul>
 
     <h2>10. 개인정보처리방침 변경 안내</h2>
-    <p>
-        본 개인정보처리방침은 관련 법령 또는 내부 정책 변경에 따라 수정될 수 있으며, 변경 시 앱 내 공지사항을 통해 안내드립니다.
-    </p>
-
+    <p>본 개인정보처리방침은 관련 법령 또는 내부 정책 변경에 따라 수정될 수 있으며, 변경 시 앱 내 공지사항을 통해 안내드립니다.</p>
+  </div>
 </body>
 </html>
+
 """
     return policy_text
 

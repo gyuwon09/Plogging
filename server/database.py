@@ -1,1 +1,1 @@
-user_data = {'gyuwon': {'password': '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c', 'user_tag': '11026', 'pont': 0}}
+user_data = {'admin': {'password': '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c', 'user_tag': '11026', 'point': 8600, 'item': {'stick_candy': 3, 'mychuu': 0, 'drink': 0, 'meals_coupon': 0}}}
