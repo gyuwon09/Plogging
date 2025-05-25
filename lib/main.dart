@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animations/animations.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+late List<CameraDescription> cameras;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras(); // 후면 카메라 정보 가져오기
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -55,7 +59,67 @@ class _HomeWithBottomNavState extends State<HomeWithBottomNav> {
           title: const Text('신갈고등학교'),
           centerTitle: true,
         ),
-        'body': Container(color: Colors.white),
+        'body': Stack(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.asset("assets/shingal.png", fit: BoxFit.cover),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Opacity(
+                opacity: 0.9,
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(15, 15, 0, 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: Icon(Icons.person_outline, size: 35),
+                        ),
+                        Text(
+                          "사용자 이름",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 10, 10),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CameraPage(camera: cameras.firstWhere((cam) => cam.lensDirection == CameraLensDirection.back)),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.camera_enhance, color: Colors.black),
+                  label: Text("플로깅 인증하기",
+                      style: TextStyle(color: Colors.black)),
+                ),
+              ),
+            ),
+          ],
+        )
       },
       {
         'appBar': AppBar(
@@ -96,7 +160,8 @@ class _HomeWithBottomNavState extends State<HomeWithBottomNav> {
                       margin: const EdgeInsets.fromLTRB(10, 40, 10, 10),
                       child: Column(
                         children: const [
-                          Icon(Icons.circle_outlined, size: 50, color: Colors.white),
+                          Icon(Icons.person_outlined,
+                              size: 50, color: Colors.white),
                           Text(
                             '사용자 이름',
                             style: TextStyle(
@@ -136,7 +201,8 @@ class _HomeWithBottomNavState extends State<HomeWithBottomNav> {
         'appBar': AppBar(title: const Text('설정')),
         'body': LayoutBuilder(
           builder: (context, constraints) {
-            final horizontalPadding = constraints.maxWidth > 600 ? 64.0 : 16.0;
+            final horizontalPadding =
+            constraints.maxWidth > 600 ? 64.0 : 16.0;
             return Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
@@ -237,14 +303,114 @@ class _HomeWithBottomNavState extends State<HomeWithBottomNav> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_basket_outlined), label: '상점'),
-          BottomNavigationBarItem(icon: Icon(Icons.circle_outlined), label: '프로필'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '프로필'),
           BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), label: '설정'),
         ],
       ),
     );
   }
 }
+class CameraPage extends StatefulWidget {
+  final CameraDescription camera;
+  const CameraPage({super.key, required this.camera});
 
+  @override
+  State<CameraPage> createState() => _CameraPageState();
+}
+
+class _CameraPageState extends State<CameraPage> {
+  late CameraController _controller;
+  Future<void>? _initializeControllerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CameraController(
+      widget.camera,
+      ResolutionPreset.max,
+      enableAudio: false,
+    );
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _takePicture() async {
+    try {
+      await _initializeControllerFuture;
+      final image = await _controller.takePicture();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('사진이 저장되었습니다: ${image.path}')),
+      );
+
+      // 여기서 image.path 를 사용해 저장, 서버 전송 등 처리 가능
+    } catch (e) {
+      print('Error taking picture: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('사진 촬영 중 오류가 발생했습니다.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: CameraPreview(_controller),
+                ),
+                Positioned(
+                  top: 40,
+                  left: 16,
+                  child: SafeArea(
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 40,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: _takePicture,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.85),
+                          border: Border.all(color: Colors.black, width: 3),
+                        ),
+                        child: const Icon(Icons.camera_alt, size: 36, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+  }
+}
+
+// 그대로 유지되는 클래스들
 class ShopItemData {
   final String name;
   final String description;
@@ -261,7 +427,6 @@ class ShopItemData {
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
-
   @override
   State<ShopPage> createState() => _ShopPageState();
 }
@@ -310,8 +475,7 @@ class _ShopPageState extends State<ShopPage> {
                 },
                 children: _tabTitles
                     .map((title) => Text(title,
-                    style:
-                    const TextStyle(fontWeight: FontWeight.bold)))
+                    style: const TextStyle(fontWeight: FontWeight.bold)))
                     .toList(),
               ),
             ),
@@ -329,10 +493,7 @@ class _ShopPageState extends State<ShopPage> {
           right: 16,
           child: FloatingActionButton(
             onPressed: () {
-              // 새로고침 로직
-              setState(() {
-                // 데이터 새로고침 예시
-              });
+              setState(() {});
             },
             backgroundColor: Colors.black,
             child: const Icon(Icons.refresh, color: Colors.white),
@@ -345,8 +506,7 @@ class _ShopPageState extends State<ShopPage> {
   Widget _buildGrid(List<ShopItemData> items) {
     return GridView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      gridDelegate:
-      const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 3 / 4,
         crossAxisSpacing: 12,
@@ -377,17 +537,15 @@ class _ShopPageState extends State<ShopPage> {
                   Text(item.description,
                       style: const TextStyle(fontSize: 12)),
                   const SizedBox(height: 2),
-                  Text('가격: \${item.price}원',
+                  Text('가격: ${item.price}원',
                       style: const TextStyle(fontSize: 12)),
                 ],
               ),
               ElevatedButton(
-                onPressed: () {
-                  // 구매 로직
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 4, horizontal: 8),
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -431,14 +589,12 @@ class _ShopPageState extends State<ShopPage> {
                 ],
               ),
               if (_selectedTab == 2)
-                Text('x\${item.count}',
+                Text('x${item.count}',
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.bold))
               else
                 ElevatedButton(
-                  onPressed: () {
-                    // 쿠폰 로직
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
@@ -446,8 +602,7 @@ class _ShopPageState extends State<ShopPage> {
                   ),
                   child: Text(
                     _selectedTab == 1 ? '다운로드' : '사용',
-                    style:
-                    const TextStyle(color: Colors.white, fontSize: 12),
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
             ],
@@ -467,7 +622,7 @@ class _SettingItem {
 const _settingsItems = [
   _SettingItem(Icons.image_outlined, '배경사진 바꾸기'),
   _SettingItem(Icons.help_outline, '사용 설명서'),
+  _SettingItem(Icons.info_outline, '개발자 정보'),
   _SettingItem(Icons.privacy_tip_outlined, '개인정보 처리방침'),
   _SettingItem(Icons.language_outlined, '언어 선택'),
-  _SettingItem(Icons.emoji_events_outlined, '도전과제'),
 ];
