@@ -1,16 +1,24 @@
-# flutter_app
+# Plogging
 
-A new Flutter project.
+플러터(Dart)로 제작된 프로토타입 어플리케이션이다.
+완성은 아니지만, 어플리케이션의 역할을 수행할 수 있는 부분만큼 구현되어있다.
 
-## Getting Started
+Plogging은 걸으며 달리거나 산책하면서 쓰레기를 줍는 친환경 운동인 플로깅 활동을 돕는 어플리케이션이다.
+신갈고등학교 교내 어플리케이션으로 기획하였으며, 대회 제출용으로 제작한 어플리케이션이다.
 
-This project is a starting point for a Flutter application.
+##홈
+걷기 기록이 남는 지도를 배치하여 내가 얼마만큼 걸었는지를 시각화하는 탭이다.
 
-A few resources to get you started if this is your first Flutter project:
+##상점
+걷기량에 따라 포인트가 기록되며 이를 사용할 수 있는 상점탭이다.
+구매할 경우 DB를 통해 내 아이템에 저장되며, 이벤트가 있을 경우 쿠폰도 다운로드 받을 수 있다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+##프로필
+플로깅 활동을 하며 걸은 걸음수를 측정하여 리질리언스 점수로 표기하고,
+하루 걸음량과 걸음 수 최고기록도 함께 표시하는 탭이다.
+커스터마이징 가능한 배경과 프로필 사진으로 사용자의 특색을 뽐낼 수 있도록 제작하였다.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##설정
+배경사진 바꾸기, 어플 사용 설명서, 개인정보 정책, 언어 선택, 도전과제등에 접근할 수 있는 탭이다.
+프로필 배경사진을 선택할 경우 개인 갤러리에서 사진을 선택할 수 있는 화면이 나온다.
+사용설명서 및 개인정보 정책을 선택할 경우 API에서 HTML response로 제공하는 화면으로 넘어간다.
